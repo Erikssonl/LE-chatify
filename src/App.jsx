@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import './Styles/App.css'
 import ChatContextProvider from './context/ChatContextProvider'
+import Home from './routes/Home'
+import Switch from './Components/Switch'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <ChatContextProvider>
+    // <ChatContextProvider>
       <>
-        <h1>Chatify</h1>
-
+        <Switch />
       </>
-    </ChatContextProvider>
+    // </ChatContextProvider>
   )
 }
 
