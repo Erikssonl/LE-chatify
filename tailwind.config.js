@@ -21,7 +21,9 @@ module.exports = {
   },
   theme: {
       extend: {
-        
+        boxShadow: {
+          cardShadow: '0px 0px 120px 30px rgba(23, 183, 148, 0.45)',
+        }
       },
   },
   plugins: [require('daisyui'),],
