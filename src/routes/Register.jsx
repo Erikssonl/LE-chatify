@@ -39,7 +39,9 @@ const Register = () => {
                     // value={regPassword}
                     // onChange={(e) => setRegPassword(e.target.value)}
                     />
-                </label>
+                  </label>
+                  <p className="text-left">Choose Avatar</p>
+                  <input type="file" className="file-input file-input-bordered file-input-sm w-60 max-w-xs" />
                   <div className="card-actions justify-end">
                         <button className="btn btn-primary">Register</button>
                   </div>
