@@ -26,7 +26,7 @@ const ChatContextProvider = (props) => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('key', '6837423b2feebc9a2e75fd353987ce1b');
+    formData.append('key', '85fa3072d23d668454706cbab59cf52a');
     formData.append('img', file);
 
     const apiUrl = 'https://api.imgbb.com/1/upload';
@@ -38,7 +38,7 @@ const ChatContextProvider = (props) => {
       });
       
       if(!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok: '+ response.statusText);
       }
 
       const data = await response.json();
@@ -59,7 +59,8 @@ const ChatContextProvider = (props) => {
         username: regUserName,
         password: regPassword,
         email: regEmail,
-        avatar: imgUrl,
+        // avatar: imgUrl,
+        avatar: 'https://i.pravatar.cc/200',
         csrfToken: myCsrfToken
       })
     })
@@ -80,7 +81,7 @@ const ChatContextProvider = (props) => {
   }
 
   return (
-    <ChatContext.Provider value={{}}>
+    <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword, regStatus, handleFileChange, postAuthRegister, imgUrl, }}>
       {props.children}
     </ChatContext.Provider>
   )
