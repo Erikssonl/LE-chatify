@@ -1,19 +1,17 @@
 import { useState, useContext } from "react"
 import { ChatContext } from '../context/ChatContextProvider';
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import styles from '../Styles/SideNav-style.module.css'
 
 const SideNavComp = () => {
     const { signOut } = useContext(ChatContext)
     const [isOpen, setIsOpen] = useState(false)
-    const navigate = useNavigate()
 
     const toggleNav = () => setIsOpen(!isOpen); 
 
     const handleSignOut = () => {
         setTimeout(signOut, 2000)
     }
-
 
   return (
     <div>
