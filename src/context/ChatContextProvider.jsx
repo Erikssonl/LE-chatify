@@ -126,31 +126,10 @@ const ChatContextProvider = (props) => {
     callback();
   };
 
-  // const auth = {
-  //   isAuthenticated: () => {
-  //     const token = sessionStorage.getItem('jwtToken');
-  //     return !!token;
-  //   },
-
-  //   signIn: async (callback) => {
-  //     const token = await signinAuth();
-  //     if (token) {
-  //       auth.isAuthenticated = true;
-  //       callback();
-  //     }
-  //   },
-
-  //   signOut: (callback) => {
-  //     sessionStorage.removeItem('jwtToken');
-  //     setJwtToken('');
-  //     auth.isAuthenticated = false;
-  //     callback();
-  //   }
-  // };
-
   return (
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
-     regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated, }}>
+     regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
+     signOut, }}>
       {props.children}
     </ChatContext.Provider>
   )
