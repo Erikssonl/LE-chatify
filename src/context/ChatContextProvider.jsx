@@ -80,8 +80,77 @@ const ChatContextProvider = (props) => {
     });
   }
 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [jwtToken, setJwtToken] = useState(null);
+  const [response, setResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const signIn= async (username, password, callback ) => {
+    setLoading(true);
+    try {
+      const response = await fetch('https://chatify-api.up.railway.app/auth/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          csrfToken: myCsrfToken
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        sessionStorage.setItem('jwtToken', data.token);
+        setJwtToken(data.token);
+        setIsAuthenticated(true);
+        callback();
+      } else {
+        throw new Error(data.message || 'Invalid username or password');
+      } 
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signOut = (callback) => {
+    sessionStorage.removeItem('jwtToken');
+    setJwtToken(null);
+    setIsAuthenticated(false);
+    callback();
+  };
+
+  // const auth = {
+  //   isAuthenticated: () => {
+  //     const token = sessionStorage.getItem('jwtToken');
+  //     return !!token;
+  //   },
+
+  //   signIn: async (callback) => {
+  //     const token = await signinAuth();
+  //     if (token) {
+  //       auth.isAuthenticated = true;
+  //       callback();
+  //     }
+  //   },
+
+  //   signOut: (callback) => {
+  //     sessionStorage.removeItem('jwtToken');
+  //     setJwtToken('');
+  //     auth.isAuthenticated = false;
+  //     callback();
+  //   }
+  // };
+
   return (
-    <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword, regStatus, handleFileChange, postAuthRegister, imgUrl, }}>
+    <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
+     regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated, }}>
       {props.children}
     </ChatContext.Provider>
   )
