@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
 
 export const ChatContext = createContext();
 
@@ -13,7 +14,6 @@ const ChatContextProvider = (props) => {
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
   }, []);
-  console.log(myCsrfToken)
 
   const [regUserName, setRegUserName] = useState('');
   const [regEmail, setRegEmail] = useState('');
@@ -27,29 +27,27 @@ const ChatContextProvider = (props) => {
 
     const formData = new FormData();
     formData.append('key', '85fa3072d23d668454706cbab59cf52a');
-    formData.append('img', file);
+    formData.append('image', file);
 
     const apiUrl = 'https://api.imgbb.com/1/upload';
 
     try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if(!response.ok) {
-        throw new Error('Network response was not ok: '+ response.statusText);
-      }
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData,
+        });
 
-      const data = await response.json();
-      const imgUrl = data.data.url;
-      setImgUrl(imgUrl);
-      toast.success('Image uploaded successfully!');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        const imageUrl = data.data.url;
+        setImgUrl(imageUrl);
     } catch (error) {
-      console.error('Upload faild: ', error);
-      toast.error('Upload faild: ' + error.toString());
+        console.error('Upload failed:', error);
     }
-  };
+};
 
   const postAuthRegister = () => {
     fetch('https://chatify-api.up.railway.app/auth/register', {
@@ -59,8 +57,8 @@ const ChatContextProvider = (props) => {
         username: regUserName,
         password: regPassword,
         email: regEmail,
-        // avatar: imgUrl,
-        avatar: 'https://i.pravatar.cc/200',
+        avatar: imgUrl,
+        // avatar: 'https://i.pravatar.cc/200',
         csrfToken: myCsrfToken
       })
     })
@@ -83,12 +81,14 @@ const ChatContextProvider = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [jwtToken, setJwtToken] = useState(null);
+  const [decodedJwt, setDecodedJwt] = useState(JSON.parse(sessionStorage.getItem('jwtDecoded')) || null);
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
+  const navigate = useNavigate();
 
-  const signIn= async (username, password, callback ) => {
+  const signIn = async (username, password) => {
     setLoading(true);
     try {
       const response = await fetch('https://chatify-api.up.railway.app/auth/token', {
@@ -106,8 +106,12 @@ const ChatContextProvider = (props) => {
       if (response.ok) {
         sessionStorage.setItem('jwtToken', data.token);
         setJwtToken(data.token);
+        const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
+        setDecodedJwt(decodedToken);
+        sessionStorage.setItem('jwtDecoded', JSON.stringify(decodedToken));
         setIsAuthenticated(true);
-        callback();
+        sessionStorage.setItem('isAuthenticated', true)
+        navigate('/chat')
       } else {
         throw new Error(data.message || 'Invalid username or password');
       } 
@@ -119,17 +123,17 @@ const ChatContextProvider = (props) => {
     }
   };
 
-  const signOut = (callback) => {
+  const signOut = () => {
     sessionStorage.removeItem('jwtToken');
     setJwtToken(null);
+    sessionStorage.removeItem('isAuthenticated')
     setIsAuthenticated(false);
-    callback();
   };
 
   return (
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
      regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
-     signOut, }}>
+     signOut, decodedJwt, }}>
       {props.children}
     </ChatContext.Provider>
   )

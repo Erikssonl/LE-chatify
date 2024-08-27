@@ -4,3 +4,8 @@
     align-items: center;
     gap: 3rem;
 }
+
+.uplodedImg {
+    border-radius: 50%;
+    max-width: 100%;
+}

@@ -51,7 +51,7 @@ const Register = () => {
                     onChange={(e) => setRegPassword(e.target.value)}
                     />
                   </label>
-                  {/* <p className="text-left">Choose Avatar</p>
+                  <p className="text-left">Choose Avatar</p>
                   <input 
                   type="file" 
                   className="file-input file-input-bordered file-input-sm w-60 max-w-xs"
@@ -59,10 +59,10 @@ const Register = () => {
                   {imgUrl && (
                     <div>
                       <p>Uploded Image:</p>
-                      <img src={imgUrl} alt="Uploaded" style={{ maxWidth: '100%' }} />
+                      <img className={styles.uplodedImg} src={imgUrl} alt="Uploaded" />
                       <p>URL: <a href={imgUrl} target="_blank">{imgUrl}</a></p>
                     </div>
-                  )} */}
+                  )}
                   <div className="card-actions justify-end">
                         <button onClick={() => postAuthRegister()} className="btn btn-primary">Register</button>
                   </div>
