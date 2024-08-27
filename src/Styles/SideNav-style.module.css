@@ -1,0 +1,63 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1;
+}
+.sideNav {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #17B794;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: width 0.5s;
+    width: 0;
+    z-index: 2;
+}
+
+.expanded {
+    width: 250px;
+}
+
+.collapsed {
+    width: 0;
+}
+
+.link {
+    padding: 8px 8px 8px 10px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #01005E;
+    display: block;
+    transition: color 0.3s;
+}
+
+.link:hover,
+.closeBtn:hover {
+    color: #f1f1f1;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    cursor: pointer;
+    color: #01005E;
+}
+
+.openBtn {
+    font-size: 35px;
+    cursor: pointer;
+    color: #17B794;
+    border: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
