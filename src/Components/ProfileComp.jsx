@@ -1,6 +1,11 @@
+import MainNavComp from "./MainNavComp"
+
 const ProfileComp = () => {
   return (
-    <div>ProfileComp</div>
+    <div>
+      <MainNavComp />
+      ProfileComp
+    </div>
   )
 }
 export default ProfileComp

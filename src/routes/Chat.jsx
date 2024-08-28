@@ -6,7 +6,6 @@ const Chat = () => {
   return (
     <div>
         <MainNavComp />
-        {/* <SideNavComp /> */}
         <ChatCopm />
     </div>
   )
