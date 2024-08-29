@@ -1,0 +1,16 @@
+/* .profileWrap{
+    display: block;
+    gap: 10vh;
+} */
+
+.inputWrap{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2%;
+    padding: 0;
+}
+
+.cardContent{ 
+    display: flex;
+}

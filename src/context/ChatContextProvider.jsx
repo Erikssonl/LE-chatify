@@ -6,6 +6,22 @@ export const ChatContext = createContext();
 const ChatContextProvider = (props) => {
 
   const [myCsrfToken, setCsrfToken] = useState([]);
+  
+  const [regUserName, setRegUserName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regStatus, setRegStatus] = useState(null)
+  const [imgUrl, setImgUrl] = useState('');
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [jwtToken, setJwtToken] = useState(null);
+  const [decodedJwt, setDecodedJwt] = useState(JSON.parse(sessionStorage.getItem('jwtDecoded')) || null);
+  const [response, setResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('https://chatify-api.up.railway.app/csrf', {
@@ -14,12 +30,6 @@ const ChatContextProvider = (props) => {
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
   }, []);
-
-  const [regUserName, setRegUserName] = useState('');
-  const [regEmail, setRegEmail] = useState('');
-  const [regPassword, setRegPassword] = useState('');
-  const [regStatus, setRegStatus] = useState(null)
-  const [imgUrl, setImgUrl] = useState('');
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -47,7 +57,7 @@ const ChatContextProvider = (props) => {
     } catch (error) {
         console.error('Upload failed:', error);
     }
-};
+  };
 
   const postAuthRegister = () => {
     fetch('https://chatify-api.up.railway.app/auth/register', {
@@ -78,15 +88,7 @@ const ChatContextProvider = (props) => {
     });
   }
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [jwtToken, setJwtToken] = useState(null);
-  const [decodedJwt, setDecodedJwt] = useState(JSON.parse(sessionStorage.getItem('jwtDecoded')) || null);
-  const [response, setResponse] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
-  const navigate = useNavigate();
+
 
   const signIn = async (username, password) => {
     setLoading(true);

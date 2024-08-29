@@ -9,7 +9,7 @@ const MainNavComp = () => {
 
 
   return (
-    <div className="navbar bg-base-100 rounded-box flex-auto justify-between px-7">
+    <div className="navbar bg-base-100 rounded-box flex-auto justify-between px-7 mb-20 ">
             <SideNavComp />
             <h1>Chatify</h1>
             {decodedJwt && (
