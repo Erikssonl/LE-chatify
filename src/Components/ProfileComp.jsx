@@ -1,23 +1,43 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import { ChatContext } from '../context/ChatContextProvider';
 import { Tooltip } from 'react-tooltip';
 import MainNavComp from "./MainNavComp"
 import style from "../Styles/ProfileComp-style.module.css"
+import { useNavigate } from "react-router-dom";
 
 const ProfileComp = () => {
-  const { decodedJwt } = useContext(ChatContext)
-
+  const { decodedJwt, updateUserData, deleteUser } = useContext(ChatContext)
+  
+  const navigate = useNavigate()
+  const [saveStatus, setSaveStatus] = useState(null);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [deleteMessage, setDeleteMessage] = useState('');
   const [inputs, setInputs] = useState({
     user: {
+      value: decodedJwt.user || '',
       disabled: true,
       icon: 'edit',
     },
     email: {
+      value: decodedJwt.email || '',
       disabled: true,
       icon: 'edit',
     }
   });
 
+  useEffect(() => {
+    setInputs({
+      user: {
+        ...inputs.user,
+        value: decodedJwt.user || '',
+      },
+      email: {
+        ...inputs.email,
+        value: decodedJwt.email || '',
+      }
+    });
+  }, [decodedJwt]);
+  
   const handleEditInput = (field) => {
     setInputs({
       ...inputs,
@@ -27,6 +47,71 @@ const ProfileComp = () => {
       }
     });
   };
+
+  const handleChange = (field, value) => {
+    setInputs(prevInputs => ({
+      ...prevInputs,
+      [field]: {
+        ...prevInputs[field],
+        value: value
+      }
+    }))
+  }
+
+  const handleSaveAllChanges = async () => {
+    if (!inputs.user.value || !inputs.email.value) {
+      setSaveMessage('Username and email cannot be empty');
+      setSaveStatus(false);
+      return;
+    }
+
+    try {
+      const result = await updateUserData({
+        userId: decodedJwt.id,
+        updatedData: {
+          user: inputs.user.value,
+          email: inputs.email.value,
+        }
+      });
+  
+      if (result.success) {
+        setSaveMessage('Success! Changes have been saved.');
+        setSaveStatus(true);
+      } else {
+        setSaveMessage(result.message || 'Failed to save changes.');
+        setSaveStatus(false);
+      }
+    } catch (error) {
+      setSaveMessage('An error occurred while saving changes.');
+      setSaveStatus(false);
+      console.error('Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Decoded JWT Updated:", decodedJwt);
+  }, [decodedJwt]);
+  
+  useEffect(() => {
+    console.log("Inputs State Updated:", inputs);
+  }, [inputs]);
+
+  const handleUserDeleted = () => {
+    navigate('/')
+  }
+
+  const handleDeleteUser = () => {
+    deleteUser()
+      .then(() => {
+        console.log('User deletion successful.');
+        setDeleteMessage('User is deleted successfully.');
+        setTimeout(handleUserDeleted, 2000);
+      })
+      .catch((error) => {
+        console.error('User deletion failed:', error);
+        setDeleteMessage('Something went wrong, user is not deleted.');
+      });
+  }
 
   return (
     <div >
@@ -42,9 +127,10 @@ const ProfileComp = () => {
             <div className={style.inputWrap}>
               <input
                 type="text"
-                value={decodedJwt.user}
+                value={inputs.user.value}
                 className="input input-bordered w-full max-w-xs"
                 disabled={inputs.user.disabled}
+                onChange={(e) => handleChange('user', e.target.value)}
               />
               <svg xmlns="http://www.w3.org/2000/svg" 
                 width="15" height="15" viewBox="0 0 15 15" 
@@ -65,9 +151,10 @@ const ProfileComp = () => {
             <div className={style.inputWrap}>
               <input
                 type="email"
-                value={decodedJwt.email}
+                value={inputs.email.value}
                 className="input input-bordered w-full max-w-xs"
                 disabled={inputs.email.disabled}
+                onChange={(e) => handleChange('email', e.target.value)}
               />
               <svg xmlns="http://www.w3.org/2000/svg" 
                 width="15" height="15" viewBox="0 0 15 15" 
@@ -85,6 +172,12 @@ const ProfileComp = () => {
               </svg>
             </div>
             <div className="card-actions justify-end">
+              <button className="btn btn-primary" onClick={()=> handleSaveAllChanges()}>Comfirm changes</button>
+              {saveStatus !== null && (
+                <div className={`text-sm font-medium ${saveStatus ? 'text-green-500' : 'text-red-500'}`}>
+                  {saveMessage}
+                </div>
+              )}
               <button className="btn bg-customDeleteBtn" onClick={()=>document.getElementById('my_modal_3').showModal()}>Delete user</button>
               <dialog id="my_modal_3" className="modal">
                 <div className="modal-box">
@@ -94,7 +187,8 @@ const ProfileComp = () => {
                   <h3 className="font-bold text-lg">Hello, dont want to chat anymore?
                   <br />You are about to delete this user!</h3>
                   <p className="py-4">Are you sure? Comfirm by clicking the button below</p>
-                  <button className="btn bg-customDeleteBtn" >Delete user</button>
+                  <button onClick={handleDeleteUser} className="btn bg-customDeleteBtn" >Delete user</button>
+                  {deleteMessage && <p>{deleteMessage}</p>}
                 </div>
               </dialog>
             </div>
