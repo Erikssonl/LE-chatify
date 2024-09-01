@@ -59,7 +59,7 @@ const ProfileComp = () => {
   }
 
   const handleSaveAllChanges = async () => {
-    if (!inputs.user.value || !inputs.email.value) {
+    if ((inputs.user.value == undefined || inputs.user.value.trim() == "") || (inputs.email.value == undefined || inputs.email.value.trim() == "")) {
       setSaveMessage('Username and email cannot be empty');
       setSaveStatus(false);
       return;
