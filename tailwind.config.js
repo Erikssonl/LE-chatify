@@ -26,6 +26,7 @@ module.exports = {
         },
         colors: {
           customDeleteBtn: '#AE3838',
+          customChatBubble: '#28518A',
         }
       },
   },

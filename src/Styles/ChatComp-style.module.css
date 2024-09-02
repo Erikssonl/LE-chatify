@@ -1,0 +1,24 @@
+.mainChatWrap{
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.sendMessWrap{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.listWrap{
+    width: 20%;
+}
+
+.chatsWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}

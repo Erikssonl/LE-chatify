@@ -22,6 +22,8 @@ const ChatContextProvider = (props) => {
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
   const navigate = useNavigate();
+  const [allUsers, setAllUsers] = useState([])
+  const [messages, setMessages] = useState('');
 
   useEffect(() => {
     fetch('https://chatify-api.up.railway.app/csrf', {
@@ -185,6 +187,59 @@ const ChatContextProvider = (props) => {
       throw error;
     }
   };
+
+  const getAllUsers = async () => {
+    const token = jwtToken || sessionStorage.getItem('jwtToken');
+
+    fetch('https://chatify-api.up.railway.app/users', {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          console.error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setAllUsers(data);
+      })
+      .catch(error => {
+        console.error('Problem with fetch:', error);
+        setAllUsers([]);
+      })
+  }
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  const getMessages = async () => {
+    const token = jwtToken || sessionStorage.getItem('jwtToken');
+
+    fetch('https://chatify-api.up.railway.app/messages', {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          console.error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then (data => {
+        setMessages(data);
+      })
+      .catch(error => {
+        console.error('There was a problem with your fetch:', error);
+      })
+  }
 
   return (
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,

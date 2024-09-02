@@ -118,7 +118,7 @@ const ProfileComp = () => {
       <MainNavComp />
       <div className="card bg-base-100 p-7 flex flex-auto justify-center items-center flex-row">
         <div className={style.cardContent}>
-          <figure className="flex-none mr-0" >
+          <figure className="flex-1 mr-0" >
             <img
               src={decodedJwt.avatar}
               alt="user avatar" />
@@ -172,13 +172,13 @@ const ProfileComp = () => {
               </svg>
             </div>
             <div className="card-actions justify-end">
-              <button className="btn btn-primary" onClick={()=> handleSaveAllChanges()}>Comfirm changes</button>
+              <button className="btn btn-primary text-secondary" onClick={()=> handleSaveAllChanges()}>Comfirm changes</button>
               {saveStatus !== null && (
                 <div className={`text-sm font-medium ${saveStatus ? 'text-green-500' : 'text-red-500'}`}>
                   {saveMessage}
                 </div>
               )}
-              <button className="btn bg-customDeleteBtn" onClick={()=>document.getElementById('my_modal_3').showModal()}>Delete user</button>
+              <button className="btn bg-customDeleteBtn text-secondary" onClick={()=>document.getElementById('my_modal_3').showModal()}>Delete user</button>
               <dialog id="my_modal_3" className="modal">
                 <div className="modal-box">
                   <form method="dialog">
