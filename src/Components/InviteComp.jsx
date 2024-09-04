@@ -32,7 +32,7 @@ const InviteComp = () => {
         <div>
           <input 
             type="text" 
-            placeholder="Search user" 
+            placeholder="Invite user to chat" 
             className="input input-bordered input-primary w-full mb-4"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}/>

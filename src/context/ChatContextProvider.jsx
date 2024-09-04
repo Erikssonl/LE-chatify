@@ -24,8 +24,10 @@ const ChatContextProvider = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
   const navigate = useNavigate();
   const [allUsers, setAllUsers] = useState([])
-  const [messages, setMessages] = useState('');
+  const [messages, setMessages] = useState([]);
   const [allConversations, setAllConversations] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
+  const [activeConversationId, setActiveConversationId] = useState('')
 
 
   useEffect(() => {
@@ -259,8 +261,13 @@ const ChatContextProvider = (props) => {
     })
   }
 
-  const getMessages = async () => {
-    fetch('https://chatify-api.up.railway.app/messages', {
+  const getMessages = (convId) => {
+    if (!convId) {
+      console.error("Conversation ID is undefined.");
+      return;
+    }
+
+    fetch('https://chatify-api.up.railway.app/messages?conversationId=' + convId, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("jwtToken")}`,
@@ -281,10 +288,32 @@ const ChatContextProvider = (props) => {
       })
   }
 
+  const selectConversation = (conversationId) => {
+    getMessages(conversationId);
+  }
+
+  const getUserByID = (userId) => {
+    fetch('https://chatify-api.up.railway.app/users/' + userId, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("jwtToken")}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    .then((res) => res.json())
+    .then(data => {
+      setUserInfo(data);
+    })
+    .catch(error => {
+      console.error('There was a problem with your fetch:', error);
+    })
+  }
+
   return (
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
      regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
-     signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, }}>
+     signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, selectConversation, 
+     activeConversationId, messages }}>
       {props.children}
     </ChatContext.Provider>
   )

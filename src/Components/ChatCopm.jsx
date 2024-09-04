@@ -5,7 +5,7 @@ import { ChatContext } from '../context/ChatContextProvider'
 import ChatListComp from './ChatListComp'
 
 const ChatCopm = () => {
-  const { decodedJwt } = useContext(ChatContext)
+  const { decodedJwt, messages } = useContext(ChatContext)
   return (
     <div className={styles.mainChatWrap}>
       <div className={styles.listWrap}>
@@ -13,36 +13,34 @@ const ChatCopm = () => {
         <ChatListComp />
       </div>
       <div className="flex-1 ">
-        <div className="card bg-base-100 mb-4 p-1">
-          <h2>Chat 1</h2>
-        </div>
         <div className="card bg-base-100 p-7 max-h-dvh">
-          <div className="chat chat-start">
-            <div className="chat-image avatar">
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS chat bubble component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-              </div>
-            </div>
-            <div className="chat-header">
-              Obi-Wan Kenobi
-            </div>
-            <div className="chat-bubble bg-customChatBubble text-secondary">You were the Chosen One!</div>
-          </div>
-          <div className="chat chat-end">
-            <div className="chat-image avatar">
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS chat bubble component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-              </div>
-            </div>
-            <div className="chat-header">
-              Anakin
-            </div>
-            <div className="chat-bubble bg-primary">I hate you!</div>
-          </div>
+          {messages && messages.length > 0 ? (
+            <>
+              <h2>Chat 1</h2>
+              <div className="divider"></div>
+              {messages.map((msg) => (
+                <div key={msg.id} className={`chat ${msg.userId === decodedJwt.id ? 'chat-end' : 'chat-start'}`}>
+                  <div className="chat-image avatar">
+                    <div className="w-10 rounded-full">
+                      <img
+                        alt="User avatar"
+                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      />
+                    </div>
+                  </div>
+                  <div className="chat-header">
+                    {msg.userId === decodedJwt.id ? "Me" : "Other User"}
+                    {/* {msg.userId === decodedJwt.id ? `${decodedJwt.username}` : "Other User"} */}
+                  </div>
+                  <div className={`chat-bubble ${msg.userId === decodedJwt.id ? 'bg-primary text-white' : 'bg-customChatBubble text-secondary'}`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            <p>Inga meddelanden att visa.</p>
+          )}
           <div className="divider"></div>
           <div className={styles.sendMessWrap}>
             <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full" />

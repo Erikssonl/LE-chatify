@@ -3,15 +3,15 @@ import { ChatContext } from '../context/ChatContextProvider'
 import styles from '../Styles/ChatComp-style.module.css'
 
 const ChatListComp = () => {
-    const { allConversations, decodedJwt } = useContext(ChatContext)
+    const { allConversations, decodedJwt, selectConversation } = useContext(ChatContext)
 
     const inviteArray = JSON.parse(decodedJwt.invite);
 
   return (
     <div>
-        {allConversations.map((conv, idx) => (
+        {allConversations.map((convId, idx) => (
             <>
-              <div className="card bg-base-100 mb-4 p-3" onClick={() => console.log(conv)}>
+              <div className="card bg-base-100 mb-4 p-3" onClick={() => selectConversation(convId)}>
                 <div className={styles.chatsWrap}>
                   <img
                     alt="Tailwind CSS chat bubble component"
@@ -25,7 +25,7 @@ const ChatListComp = () => {
         {inviteArray.length > 0 ? (
             <div>
                 {inviteArray.map((invite, index) => (
-                    <div className="card bg-base-100 mb-4 p-3" onClick={() => console.log(invite.conversationId)}>
+                    <div className="card bg-base-100 mb-4 p-3" onClick={() => selectConversation(invite.conversationId)}>
                         <div className={styles.chatsWrap}>
                             <img
                                 alt="Tailwind CSS chat bubble component"
