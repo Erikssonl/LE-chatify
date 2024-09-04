@@ -2,26 +2,15 @@ import { useContext } from 'react'
 import styles from '../Styles/ChatComp-style.module.css'
 import InviteComp from './InviteComp'
 import { ChatContext } from '../context/ChatContextProvider'
+import ChatListComp from './ChatListComp'
 
 const ChatCopm = () => {
-  const { allConversations } = useContext(ChatContext)
+  const { decodedJwt } = useContext(ChatContext)
   return (
     <div className={styles.mainChatWrap}>
       <div className={styles.listWrap}>
         <InviteComp />
-        {allConversations.map((conv, idx) => (
-            <>
-              <div className="card bg-base-100 mb-4 p-3" onClick={() => console.log(conv)}>
-                <div className={styles.chatsWrap}>
-                  <img
-                    alt="Tailwind CSS chat bubble component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" 
-                    className="w-10 rounded-full"/>
-                  <small>Konversation {idx + 1}</small>
-                </div>
-              </div>
-            </>
-          ))}
+        <ChatListComp />
       </div>
       <div className="flex-1 ">
         <div className="card bg-base-100 mb-4 p-1">
