@@ -25,6 +25,8 @@ const ProfileComp = () => {
     }
   });
 
+  // const [isChanged, setIsChanged] = useState(false);
+
   useEffect(() => {
     setInputs({
       user: {
@@ -50,12 +52,23 @@ const ProfileComp = () => {
 
   const handleChange = (field, value) => {
     setInputs(prevInputs => ({
-      ...prevInputs,
-      [field]: {
-        ...prevInputs[field],
-        value: value
-      }
-    }))
+        ...prevInputs,
+        [field]: {
+            ...prevInputs[field],
+            value: value
+          }
+        }))
+        // setInputs(prevInputs => {
+        //   const newInputs = {
+        //     ...prevInputs,
+        //     [field]: {
+        //       ...prevInputs[field],
+        //       value: value
+        //     }
+        //   };
+        //   const changed = newInputs.user.value !== decodedJwt.user || newInputs.email.value !== decodedJwt.email;
+        //   setIsChanged(changed);
+        // });
   }
 
   const handleSaveAllChanges = async () => {
@@ -75,8 +88,11 @@ const ProfileComp = () => {
       });
   
       if (result.success) {
+        // TODO: Du behöver uppdatera state här för att det ska synas på sidan direkt. Reaktivt.
+        // typ: setUsername(...) eller dylikt efter att du uppdaterat ditt state för inputs
         setSaveMessage('Success! Changes have been saved.');
         setSaveStatus(true);
+        // setIsChanged(false);
       } else {
         setSaveMessage(result.message || 'Failed to save changes.');
         setSaveStatus(false);
@@ -172,7 +188,12 @@ const ProfileComp = () => {
               </svg>
             </div>
             <div className="card-actions justify-end">
-              <button className="btn btn-primary text-secondary" onClick={()=> handleSaveAllChanges()}>Comfirm changes</button>
+              <button 
+              className="btn btn-primary text-secondary" 
+              onClick={()=> handleSaveAllChanges()} 
+              // disabled={!isChanged}
+              >
+                Confirm changes</button>
               {saveStatus !== null && (
                 <div className={`text-sm font-medium ${saveStatus ? 'text-green-500' : 'text-red-500'}`}>
                   {saveMessage}

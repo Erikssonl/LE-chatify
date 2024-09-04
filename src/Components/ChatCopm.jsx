@@ -1,30 +1,27 @@
+import { useContext } from 'react'
 import styles from '../Styles/ChatComp-style.module.css'
+import InviteComp from './InviteComp'
+import { ChatContext } from '../context/ChatContextProvider'
 
 const ChatCopm = () => {
+  const { allConversations } = useContext(ChatContext)
   return (
     <div className={styles.mainChatWrap}>
       <div className={styles.listWrap}>
-        <div>
-          <input type="text" placeholder="Search user" className="input input-bordered input-primary w-full mb-4" />
-        </div>
-        <div className="card bg-base-100 mb-4 p-3">
-          <div className={styles.chatsWrap}>
-            <img
-              alt="Tailwind CSS chat bubble component"
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" 
-              className="w-10 rounded-full"/>
-            <p>Test chat</p>
-          </div>
-        </div>
-        <div className="card bg-base-100 mb-4 p-3">
-          <div className={styles.chatsWrap}>
-            <img
-              alt="Tailwind CSS chat bubble component"
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" 
-              className="w-10 rounded-full"/>
-            <p>Test chat</p>
-          </div>
-        </div>
+        <InviteComp />
+        {allConversations.map((conv, idx) => (
+            <>
+              <div className="card bg-base-100 mb-4 p-3" onClick={() => console.log(conv)}>
+                <div className={styles.chatsWrap}>
+                  <img
+                    alt="Tailwind CSS chat bubble component"
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" 
+                    className="w-10 rounded-full"/>
+                  <small>Konversation {idx + 1}</small>
+                </div>
+              </div>
+            </>
+          ))}
       </div>
       <div className="flex-1 ">
         <div className="card bg-base-100 mb-4 p-1">
