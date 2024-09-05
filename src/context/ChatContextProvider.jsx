@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
+import DOMPurify from "dompurify";
 
 export const ChatContext = createContext();
 
@@ -18,7 +19,6 @@ const ChatContextProvider = (props) => {
   const [password, setPassword] = useState('');
   const [jwtToken, setJwtToken] = useState(null);
   const [decodedJwt, setDecodedJwt] = useState(JSON.parse(sessionStorage.getItem('jwtDecoded')) || null);
-  const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
@@ -28,6 +28,8 @@ const ChatContextProvider = (props) => {
   const [allConversations, setAllConversations] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState('')
+  const [conId, setConId] = useState("")
+
 
 
   useEffect(() => {
@@ -123,6 +125,7 @@ const ChatContextProvider = (props) => {
         throw new Error(data.message || 'Invalid username or password');
       } 
     } catch (error) {
+      // Sentry.captureException(error);
       setError(error.message);
       throw error;
     } finally {
@@ -220,9 +223,13 @@ const ChatContextProvider = (props) => {
   useEffect(() => {
     if (jwtToken) {
       getAllUsers();
-      getAllConversations();
     }
   }, [jwtToken]);
+
+  useEffect(() => {
+    getAllConversations();
+  }, []);
+  
 
   const getAllConversations = () => {
     fetch('https://chatify-api.up.railway.app/conversations', {
@@ -261,13 +268,12 @@ const ChatContextProvider = (props) => {
     })
   }
 
-  const getMessages = (convId) => {
-    if (!convId) {
-      console.error("Conversation ID is undefined.");
-      return;
+  const getMessages = (cId) => {
+    if (!conId) {
+      setConId(cId);
     }
 
-    fetch('https://chatify-api.up.railway.app/messages?conversationId=' + convId, {
+    fetch('https://chatify-api.up.railway.app/messages?conversationId=' + conId, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("jwtToken")}`,
@@ -288,8 +294,31 @@ const ChatContextProvider = (props) => {
       })
   }
 
-  const selectConversation = (conversationId) => {
-    getMessages(conversationId);
+  const postMessages = ( newMessage) => {
+    const sanitizeMes = DOMPurify.sanitize(newMessage)
+
+    fetch('https://chatify-api.up.railway.app/messages', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("jwtToken")}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: sanitizeMes,
+        conversationId: conId
+      })
+    })
+    .then(response => {
+      if(!response.ok) {
+        console.error('Message faild to send.');
+      }
+    })
+    .then(()=> {
+      console.log("Message created successfully");
+    })
+    .catch(error => {
+      console.error('There was a problem with your fetch:', error);
+    })
   }
 
   const getUserByID = (userId) => {
@@ -312,8 +341,8 @@ const ChatContextProvider = (props) => {
   return (
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
      regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
-     signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, selectConversation, 
-     activeConversationId, messages }}>
+     signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, 
+     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId }}>
       {props.children}
     </ChatContext.Provider>
   )
