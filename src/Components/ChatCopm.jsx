@@ -31,25 +31,27 @@ const ChatCopm = () => {
             <>
               <h2>Chat 1</h2>
               <div className="divider"></div>
-              {messages.map((msg) => (
-                <div key={msg.id} className={`chat ${msg.userId === decodedJwt.id ? 'chat-end' : 'chat-start'}`}>
-                  <div className="chat-image avatar">
-                    <div className="w-10 rounded-full">
-                      <img
-                        alt="User avatar"
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      />
+              <div className={styles.messagesWrap}>
+                {messages.map((msg) => (
+                  <div key={msg.id} className={`chat ${msg.userId === decodedJwt.id ? 'chat-end' : 'chat-start'}`}>
+                    <div className="chat-image avatar">
+                      <div className="w-10 rounded-full">
+                        <img
+                          alt="User avatar"
+                          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                        />
+                      </div>
+                    </div>
+                    <div className="chat-header">
+                      {msg.userId === decodedJwt.id ? "Me" : "Other User"}
+                      {/* {msg.userId === decodedJwt.id ? `${decodedJwt.username}` : "Other User"} */}
+                    </div>
+                    <div className={`chat-bubble ${msg.userId === decodedJwt.id ? 'bg-primary text-white' : 'bg-customChatBubble text-secondary'}`}>
+                      {msg.text}
                     </div>
                   </div>
-                  <div className="chat-header">
-                    {msg.userId === decodedJwt.id ? "Me" : "Other User"}
-                    {/* {msg.userId === decodedJwt.id ? `${decodedJwt.username}` : "Other User"} */}
-                  </div>
-                  <div className={`chat-bubble ${msg.userId === decodedJwt.id ? 'bg-primary text-white' : 'bg-customChatBubble text-secondary'}`}>
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </>
           ) : (
             <p>Inga meddelanden att visa.</p>

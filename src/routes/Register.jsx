@@ -80,7 +80,7 @@ const Register = () => {
                     </div>
                   )}
                   <div className="card-actions justify-end">
-                        <button onClick={handleRegister} className="btn btn-primary">Register</button>
+                        <button onClick={() => postAuthRegister()} className="btn btn-primary">Register</button>
                   </div>
                   <div>
                     {regStatus === false ? (

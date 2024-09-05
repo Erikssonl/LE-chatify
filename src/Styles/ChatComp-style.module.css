@@ -14,6 +14,8 @@
 
 .listWrap{
     width: 20%;
+    height: 100dvh;
+    overflow-y: auto;
 }
 
 .chatsWrap {
@@ -21,4 +23,9 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+}
+
+.messagesWrap{
+    height: 100dvh;
+    overflow-y: auto;
 }
