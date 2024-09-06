@@ -24,7 +24,6 @@ const ChatContextProvider = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState((sessionStorage.getItem('isAuthenticated') === 'true') || false);
   const navigate = useNavigate();
   const [allUsers, setAllUsers] = useState([])
-  const [messages, setMessages] = useState([]);
   const [allConversations, setAllConversations] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState('')
@@ -268,12 +267,16 @@ const ChatContextProvider = (props) => {
     })
   }
 
-  const getMessages = (cId) => {
-    if (!conId) {
-      setConId(cId);
-    }
+  const [showConv, setShowConv] = useState(true);
+  const [messages, setMessages] = useState([]);
 
-    fetch('https://chatify-api.up.railway.app/messages?conversationId=' + conId, {
+  const getMessages = (cId) => {
+    // if (!conId) {
+    //   setConId(cId);
+    // }
+    // console.log("fetch")
+
+    fetch('https://chatify-api.up.railway.app/messages?conversationId=' + cId, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("jwtToken")}`,
@@ -288,6 +291,7 @@ const ChatContextProvider = (props) => {
       })
       .then (data => {
         setMessages(data);
+        setShowConv(true);
       })
       .catch(error => {
         console.error('There was a problem with your fetch:', error);
@@ -342,7 +346,7 @@ const ChatContextProvider = (props) => {
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
      regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
      signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, 
-     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId }}>
+     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId, showConv, setShowConv }}>
       {props.children}
     </ChatContext.Provider>
   )
