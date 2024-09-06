@@ -1,12 +1,28 @@
 import styles from '../Styles/Register-style.module.css'
 import { useContext } from 'react';
 import { ChatContext } from '../context/ChatContextProvider';
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Register = () => {
   const {setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword,
-     regPassword, regStatus, handleFileChange, postAuthRegister, imgUrl
+     regPassword, regStatus, handleFileChange, postAuthRegister, imgUrl, setRegStatus
   } = useContext(ChatContext)
+
+  // const navigate = useNavigate();
+
+  // const handleRegister = async () => {
+  //   try {
+  //     await postAuthRegister();
+  //     if (regStatus) {
+  //       setTimeout(() => {
+  //         navigate('/signin');
+  //         setRegStatus(false)
+  //       }, 2000)
+  //     }
+  //   } catch (error) {
+  //     console.error('Registration failed:', error);
+  //   }
+  // };
 
   return (
     <div className={styles.registerWrap}>
