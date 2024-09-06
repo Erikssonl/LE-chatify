@@ -69,6 +69,8 @@ const ChatContextProvider = (props) => {
     }
   };
 
+  const [regError, setRegError] = useState("");
+
   const postAuthRegister = () => {
     fetch('https://chatify-api.up.railway.app/auth/register', {
       method: 'POST',
@@ -83,19 +85,37 @@ const ChatContextProvider = (props) => {
       })
     })
     .then(response => {
-      if (!response.ok){
-        throw new Error(`HTTP status ${response.status}`)
+      if (!response.ok) {
+        return response.json().then(data => {
+          throw new Error(data.error || 'Unknown error occurred');
+        });
       }
       return response.json();
     })
     .then(data => {
-      console.log(data)
+      console.log(data);
       setRegStatus(true);
+      setRegError(""); // Rensa eventuella tidigare felmeddelanden
     })
     .catch(error => {
-      console.error('Error: ', error);
+      console.error('Error: ', error.message);
       setRegStatus(false);
+      setRegError(error.message); // Sätt felmeddelandet här
     });
+    // .then(response => {
+    //   if (!response.ok){
+    //     throw new Error(`HTTP status ${response.status}`)
+    //   }
+    //   return response.json();
+    // })
+    // .then(data => {
+    //   console.log(data)
+    //   setRegStatus(true);
+    // })
+    // .catch(error => {
+    //   console.error('Error: ', error);
+    //   setRegStatus(false);
+    // });
   }
 
   const signIn = async (username, password) => {
@@ -365,7 +385,7 @@ const ChatContextProvider = (props) => {
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
      regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
      signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, 
-     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId, showConv, setShowConv, deleteMessage }}>
+     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId, showConv, setShowConv, deleteMessage, regError }}>
       {props.children}
     </ChatContext.Provider>
   )
