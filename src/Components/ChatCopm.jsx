@@ -14,11 +14,11 @@ const ChatCopm = () => {
     setInputValue("")
   }
 
-  useEffect (()=> {
-    if (conId) {
-      // getMessages()
-    }
-  }, [hadleSendMessage, conId])
+  // useEffect (()=> {
+  //   if (conId) {
+  //     getMessages()
+  //   }
+  // }, [hadleSendMessage,])
 
   useEffect(() => {
     if (conId) {

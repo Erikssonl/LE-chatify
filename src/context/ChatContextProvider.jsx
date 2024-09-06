@@ -323,6 +323,7 @@ const ChatContextProvider = (props) => {
     })
     .then(()=> {
       console.log("Message created successfully");
+      getMessages(conId);
     })
     .catch(error => {
       console.error('There was a problem with your fetch:', error);
