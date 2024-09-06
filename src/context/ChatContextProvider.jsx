@@ -82,7 +82,6 @@ const ChatContextProvider = (props) => {
         password: regPassword,
         email: regEmail,
         avatar: avatarUrl,
-        // avatar: 'https://i.pravatar.cc/200',
         csrfToken: myCsrfToken
       })
     })

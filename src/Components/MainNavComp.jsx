@@ -7,7 +7,6 @@ import styles from '../Styles/MainNav-style.module.css'
 const MainNavComp = () => {
     const { decodedJwt } = useContext(ChatContext)
 
-
   return (
     <div className="navbar bg-base-100 rounded-box flex-auto justify-between px-7 mb-16 ">
             <SideNavComp />

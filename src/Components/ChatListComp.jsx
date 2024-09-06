@@ -13,7 +13,7 @@ const ChatListComp = () => {
     setConId(convId);
     console.log(convId);
     getMessages(convId);
-};
+  };
 
   const validAllConversations = allConversations || [];
   const hasContent = validAllConversations.length > 0 || inviteArray.length > 0;
