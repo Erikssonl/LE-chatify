@@ -30,6 +30,7 @@ const ChatContextProvider = (props) => {
   const [conId, setConId] = useState("")
   const [showConv, setShowConv] = useState(true);
   const [messages, setMessages] = useState([]);
+  const [regError, setRegError] = useState("");
 
 
 
@@ -69,9 +70,10 @@ const ChatContextProvider = (props) => {
     }
   };
 
-  const [regError, setRegError] = useState("");
 
   const postAuthRegister = () => {
+    const avatarUrl = imgUrl || 'https://i.ibb.co/KhWVBRX/pngtree-character-default-avatar-image-2237203.jpg';
+
     fetch('https://chatify-api.up.railway.app/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -79,7 +81,7 @@ const ChatContextProvider = (props) => {
         username: regUserName,
         password: regPassword,
         email: regEmail,
-        avatar: imgUrl,
+        avatar: avatarUrl,
         // avatar: 'https://i.pravatar.cc/200',
         csrfToken: myCsrfToken
       })
@@ -95,27 +97,13 @@ const ChatContextProvider = (props) => {
     .then(data => {
       console.log(data);
       setRegStatus(true);
-      setRegError(""); // Rensa eventuella tidigare felmeddelanden
+      setRegError("");
     })
     .catch(error => {
       console.error('Error: ', error.message);
       setRegStatus(false);
-      setRegError(error.message); // Sätt felmeddelandet här
+      setRegError(error.message);
     });
-    // .then(response => {
-    //   if (!response.ok){
-    //     throw new Error(`HTTP status ${response.status}`)
-    //   }
-    //   return response.json();
-    // })
-    // .then(data => {
-    //   console.log(data)
-    //   setRegStatus(true);
-    // })
-    // .catch(error => {
-    //   console.error('Error: ', error);
-    //   setRegStatus(false);
-    // });
   }
 
   const signIn = async (username, password) => {
