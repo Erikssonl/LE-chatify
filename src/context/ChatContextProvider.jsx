@@ -28,6 +28,8 @@ const ChatContextProvider = (props) => {
   const [userInfo, setUserInfo] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState('')
   const [conId, setConId] = useState("")
+  const [showConv, setShowConv] = useState(true);
+  const [messages, setMessages] = useState([]);
 
 
 
@@ -219,14 +221,15 @@ const ChatContextProvider = (props) => {
       })
   }
 
-  useEffect(() => {
-    if (jwtToken) {
-      getAllUsers();
-    }
-  }, [jwtToken]);
+  // useEffect(() => {
+  //   if (jwtToken) {
+  //     getAllUsers();
+  //   }
+  // }, [jwtToken]);
 
   useEffect(() => {
     getAllConversations();
+    getAllUsers();
   }, []);
   
 
@@ -267,14 +270,7 @@ const ChatContextProvider = (props) => {
     })
   }
 
-  const [showConv, setShowConv] = useState(true);
-  const [messages, setMessages] = useState([]);
-
   const getMessages = (cId) => {
-    // if (!conId) {
-    //   setConId(cId);
-    // }
-    // console.log("fetch")
 
     fetch('https://chatify-api.up.railway.app/messages?conversationId=' + cId, {
       method: 'GET',
@@ -325,6 +321,29 @@ const ChatContextProvider = (props) => {
     })
   }
 
+  const deleteMessage = (msgId) => {
+    fetch(`https://chatify-api.up.railway.app/messages/${msgId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("jwtToken")}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Faild to delete the message');
+      }
+      setMessages(prevMessages => prevMessages.filter(msg => msg.id !== msgId));
+      return response.json();
+    })
+    .then(data => {
+      console.log('Message deleted:', data);
+    })
+    .catch(error => {
+      console.error('Error deleting message:', error);
+    })
+  }
+
   const getUserByID = (userId) => {
     fetch('https://chatify-api.up.railway.app/users/' + userId, {
       method: 'GET',
@@ -346,7 +365,7 @@ const ChatContextProvider = (props) => {
     <ChatContext.Provider value={{setRegUserName, regUserName, setRegEmail, regEmail, setRegPassword, regPassword,
      regStatus, handleFileChange, postAuthRegister, imgUrl, username, setUsername, password, setPassword, signIn, isAuthenticated,
      signOut, decodedJwt, updateUserData, deleteUser, allUsers, inviteUser, allConversations, 
-     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId, showConv, setShowConv }}>
+     activeConversationId, messages, setMessages, postMessages, getMessages, conId, setConId, showConv, setShowConv, deleteMessage }}>
       {props.children}
     </ChatContext.Provider>
   )

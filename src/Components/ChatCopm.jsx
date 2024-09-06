@@ -6,7 +6,7 @@ import ChatListComp from './ChatListComp'
 import LandingPageComp from './LandingPageComp'
 
 const ChatCopm = () => {
-  const { decodedJwt, messages, postMessages, getMessages, conId } = useContext(ChatContext)
+  const { decodedJwt, messages, postMessages, getMessages, conId, deleteMessage } = useContext(ChatContext)
   const [inputValue, setInputValue] = useState("")
 
   const hadleSendMessage = () => {
@@ -58,7 +58,7 @@ const ChatCopm = () => {
                         {msg.text}
                       </div>
                       {msg.userId === decodedJwt.id && (
-                        <div className="chat-footer mt-2">
+                        <div onClick={() => deleteMessage(msg.id)} className="chat-footer mt-2">
                           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 8 8" fill="none">
                             <path d="M2.6125 0.276563C2.69687 0.10625 2.87031 0 3.05938 0H4.94063C5.12969 0 5.30312 0.10625 5.3875 0.276563L5.5 0.5H7C7.27656 0.5 7.5 0.723437 7.5 1C7.5 1.27656 7.27656 1.5 7 1.5H1C0.723437 1.5 0.5 1.27656 0.5 1C0.5 0.723437 0.723437 0.5 1 0.5H2.5L2.6125 0.276563ZM1 2H7V7C7 7.55156 6.55156 8 6 8H2C1.44844 8 1 7.55156 1 7V2ZM2.5 3C2.3625 3 2.25 3.1125 2.25 3.25V6.75C2.25 6.8875 2.3625 7 2.5 7C2.6375 7 2.75 6.8875 2.75 6.75V3.25C2.75 3.1125 2.6375 3 2.5 3ZM4 3C3.8625 3 3.75 3.1125 3.75 3.25V6.75C3.75 6.8875 3.8625 7 4 7C4.1375 7 4.25 6.8875 4.25 6.75V3.25C4.25 3.1125 4.1375 3 4 3ZM5.5 3C5.3625 3 5.25 3.1125 5.25 3.25V6.75C5.25 6.8875 5.3625 7 5.5 7C5.6375 7 5.75 6.8875 5.75 6.75V3.25C5.75 3.1125 5.6375 3 5.5 3Z" fill="#AE3838"/>
                           </svg>
